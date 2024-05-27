@@ -50,9 +50,11 @@ export default async function Component({ searchParams }: ComponentProps) {
           <CardDescription>
             Uma listagem de pedidos do seu negócio.
           </CardDescription>
-          <div className="flex pt-10 gap-4">
-            <SearchInput />
-            <FilterDropdown />
+          <div className="flex pt-10 w-full justify-between">
+            <div className='flex gap-4'>
+              <SearchInput />
+              <FilterDropdown />
+            </div>
             <DrawerDialog />
           </div>
         </CardHeader>

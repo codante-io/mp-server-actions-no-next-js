@@ -2,6 +2,7 @@
 
 /* eslint-disable react/no-unescaped-entities */
 import * as React from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from 'usehooks-ts';
@@ -36,8 +37,10 @@ import {
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlusCircle } from 'lucide-react';
+import { LoaderIcon, PlusCircle } from 'lucide-react';
 import { DatePicker } from './ui/date-picker';
+import createOrder from '@/lib/actions/createOrder';
+import { format } from 'date-fns';
 
 export function DrawerDialog() {
   const [open, setOpen] = React.useState(false);
@@ -68,7 +71,10 @@ export function DrawerDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Cadastrar Pedido</Button>
+        <Button variant="default" className="flex gap-2">
+          <PlusCircle className="h-5 w-5" />
+          Cadastrar Pedido
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
@@ -89,19 +95,36 @@ export function DrawerDialog() {
 }
 
 function OrderForm({ className }: React.ComponentProps<'form'>) {
+  const [orderDate, setOrderDate] = React.useState<Date>();
+  const [state, formAction] = useFormState(createOrder, null)
+
+  console.log(state)
+
   return (
-    <form className={cn('grid items-start gap-4', className)}>
+    <form
+      action={formAction}
+      className={cn('grid items-start gap-4', className)}
+    >
       <div className="grid gap-2">
-        <Label htmlFor="name">Nome do Cliente</Label>
-        <Input type="name" id="name" placeholder="José Carlos da Silva" />
+        <Label htmlFor="customer_name">Nome do Cliente</Label>
+        <Input
+          name="customer_name"
+          id="customer_name"
+          placeholder="José Carlos da Silva"
+        />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="email">Email do Cliente</Label>
-        <Input type="email" id="email" placeholder="jose@example.com" />
+        <Label htmlFor="customer_email">Email do Cliente</Label>
+        <Input
+          name="customer_email"
+          type="email"
+          id="customer_email"
+          placeholder="jose@example.com"
+        />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="username">Status</Label>
-        <Select>
+        <Label htmlFor="status">Status</Label>
+        <Select name="status">
           <SelectTrigger className="">
             <SelectValue placeholder="Pendente | Completo" />
           </SelectTrigger>
@@ -113,13 +136,31 @@ function OrderForm({ className }: React.ComponentProps<'form'>) {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="username">Data do Pedido</Label>
-        <DatePicker />
+        <DatePicker onSelect={(date) => setOrderDate(date)} />
+        <Input
+          type="hidden"
+          name="order_date"
+          defaultValue={orderDate ? format(orderDate, 'yyyy-MM-dd') : ''}
+        />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="username">Valor do Pedido</Label>
-        <Input id="username" placeholder="100,00" />
+        <Label htmlFor="amount_in_cents">Valor do Pedido</Label>
+        <Input
+          name="amount_in_cents"
+          id="amount_in_cents"
+          placeholder="100,00"
+        />
+        <SubmitButton />
       </div>
-      <Button type="submit">Cadastrar</Button>
     </form>
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending} className="flex gap-2">
+      {pending ? <LoaderIcon className="h-4 w-4" /> : 'Cadastrar'}
+    </Button>
   );
 }
