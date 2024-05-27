@@ -1,3 +1,4 @@
+import { DrawerDialog } from '@/components/drawer-dialog';
 import FilterDropdown from '@/components/filter-dropdown';
 import OrdersTable from '@/components/orders-table';
 import Pagination from '@/components/pagination';
@@ -52,6 +53,7 @@ export default async function Component({ searchParams }: ComponentProps) {
           <div className="flex pt-10 gap-4">
             <SearchInput />
             <FilterDropdown />
+            <DrawerDialog />
           </div>
         </CardHeader>
         <CardContent>
