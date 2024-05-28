@@ -1,20 +1,22 @@
-# Busca, filtro, ordenação e paginação com Next.js
+# Server Actions no Next.js
 
-Quando um dev front-end pensa em _busca_, _filtro_, _ordenação_ e _paginação_, provavelmente pensa em usar métodos como `Array.filter()` ou `Array.sort()` diretamente no front. Mas e se tivermos 100, 500, 1000 itens paginados de 10 em 10? Gerenciar isso pelo front é uma tarefa hercúlea - e pior, não muito eficiente.
+A mutação de dados (criar, deletar, atualizar) é um "capítulo à parte" nas novas versões do Next.js e do React quando utilizamos server components.
 
-Neste Mini Projeto, vamos implementar uma API que retorna uma listagem de pedidos. Por mais simples que pareça, essa é uma API poderosa: ela nos permite passar, como _query parameters_, busca textual, filtro, ordenação e paginação. E o melhor de tudo: **todas essas informações ficarão na URL** para fácil compartilhamento!
+Neste Mini Projeto, vamos implementar uma API que cria e deleta pedidos. E tudo será feito por meio de Server Actions, com revalidação, atualização dos dados na API e tratamento de erros.
 
-Tudo isso no front usando Next.js e Server Components!
+Vale lembrar que esse Mini Projeto é uma "continuação" do Mini Projeto [Busca, filtro, ordenação e paginação com Next.js](https://codante.io/mini-projetos/busca-filtro-ordenacao-e-paginacao-com-nextjs). Mas não se assuste - se você não fez o Mini Projeto anterior, poderá tranquilamente fazer esse - uma vez que eles são independentes. 
 
 ## 🤓 Antes de começar
 
-O design e UI do front já estão implementados! O objetivo aqui é conseguir conectar a API e fazer as funcionalidades de busca, filtro, ordenação e paginação funcionarem.
+O design e UI do front já estão implementados! O objetivo aqui é conseguir conectar a API e fazer as funcionalidades de criar novo pedido e deletar um pedido existente.
 
 Para isso, basta fazer um fork, clonar o código para a sua máquina, instalar as dependências e rodar `pnpm run dev` ou `npm run dev`!
 
-#### A API
+### A API
 
-A API que será utilizada foi desenvolvida por nós, do Codante. O endpoint principal (de listagem de pedidos) está em `https://apis.codante.io/api/orders-api/orders`. A API é capaz de filtrar, ordenar, paginar e fazer uma busca textual.
+A API que será utilizada foi desenvolvida por nós, do Codante. O endpoint principal (de listagem de pedidos) está em `https://apis.codante.io/api/orders-api/orders`. A API é capaz de filtrar, ordenar, paginar e fazer uma busca textual. Também é capaz de criar ou apagar um pedido. 
+
+Neste Mini Projeto vamos utilizar majoritariamente os métodos `POST` e `DELETE` para, respectivamente, criarmos e apagarmos pedidos. 
 
 A documentação da API está em <a target="_blank" href="https://apis-docs.codante.io/orders-api">https://apis-docs.codante.io/orders-api</a>. Será necessário consultá-la para fazer este Mini Projeto.
 
@@ -23,55 +25,36 @@ A documentação da API está em <a target="_blank" href="https://apis-docs.coda
 
 ## 🔨 Requisitos
 
-**Conectar dados da API à tabela**
+**Criar Formulário de Novo Pedido**
 
-- Popule a tabela com os dados que vêm da API.
+- Crie uma Server Action para criar novos pedidos
 - Você deverá usar os campos
   - Nome do Cliente
   - Email do Cliente
   - Status
   - Data do Pedido
   - Valor do Pedido
+- O formulário deverá estar dentro do Modal de cadastrar pedido. 
+- Faça validação de erros e de sucesso da forma como achar mais interessante (banner, toast, alerta, etc). O importante aqui é um "feedback" para o usuário saber se a operação funcionou ou não.  
+- O novo pedido criado deverá aparecer na tela, sem ser necessário um novo *refresh* no browser.
 
-> [!TIP]  
-> O valor do pedido está em centavos. Faça as conversões e transforme para o formato brasileiro de número.  
+> [!WARNING]  
+> Uma possibilidade para trabalhar com a validação é o uso do hook `useFormState` / `useActionState`. Atenção que este é um hook que está apenas presente nas versões *canary* do React (e nas últimas versões do Next.js) e irá ter seu nome alterado. Mais infos [neste link.](https://react.dev/reference/react/useActionState)
 
-**Busca Textual**
 
-- Faça uma busca textual pelo nome do cliente.
-- A busca deverá ser totalmente server-side (ou seja, pela API e não pelo front-end).
-- A busca deverá ser refletida na URL. Quando não há uma busca, a URL não deverá mais possuir a query de busca.
+**Deletar um Pedido**
 
-**Filtro de Status**
-
-- Faça um filtro de status (pending, completed) usando o botão de filtro.
-- O filtro deverá ser totalmente server-side.
-- O filtro deverá ser refletido na URL. Quando não há filtros ativos, a URL não deverá mais possuir a query de filtro.
-
-**Ordenação de Campos**
-
-- Crie ordenação para, pelo menos, os campos de _data do pedido_ e _valor_.
-- A ordenação deverá ser ativada com um clique no nome da coluna respectiva (por exemplo, `valor`).
-- Troque o ícone ao lado do nome da coluna para que reflita corretamente o tipo da ordenação.
-- A ordenação deverá ser refletida na URL. Quando não há nenhuma ordenação, a URL não deverá mais possuir a query de ordenação.
-
-**Paginação**
-
-- Implemente a paginação conforme os dados recebidos da API - a API já traz os links de páginas prontos para serem implementados.
-- Ative e desative os botões de próximo e anterior quando estiver na primeira e na última página.
-- A paginação também deverá ser refletida na URL.
-
-**Server e Client Components**
-
-- Decida quais componentes deverão ser servidor e quais deverão ser de cliente.
+- Crie uma Server Action para deletar um pedido utilizando o ícone de lixeira.
+- Faça validação de erros e de sucesso da forma como achar mais interessante (banner, toast, alerta, etc). O importante aqui é um "feedback" para o usuário saber se a operação funcionou ou não.
+- O pedido deletado deverá desaparecer da tela, sem ser necessário um novo *refresh* no browser.
 
 ## 🔨 Desafio extra para quem quer ir além
 
-- Utilize o hook `useDebounce` para atrasar a execução da função de busca textual e evitar muitos requests.
+- Para um melhor *feedback* para o usuário, ao deletar ou adicionar um pedido, adicione uma animação. 
 
 ## 🎨 Design Sugerido
 
-Neste mini projeto não será preciso implementar nenhum design - já fizemos isso por você.
+Neste Mini Projeto não será preciso implementar nenhum design - já fizemos isso por você.
 
 ## 👉🏽 Sobre este mini-projeto
 
@@ -79,15 +62,15 @@ Neste mini projeto não será preciso implementar nenhum design - já fizemos is
 
 #### Next.js
 
-- Router
-- Search Params
-- Estado na URL
+- Server Actions
+- `revalidatePath()`
+- Client vs Server Components
+- `shadcn/ui` (biblioteca de interface de usuário)
+- `useFormState` / `useActionState`
 - Server Components no Next.js
-- 'use client' 
-- Paginação e Ordenação. 
 
 ### Pré-requisitos
 
 - React
-- Next.js básico
+- Next.js básico versões 13+
 - Entender as diferenças entre server e client components é recomendável
