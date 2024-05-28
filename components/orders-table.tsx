@@ -73,9 +73,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
             Valor
             {getSortIcon('amount_in_cents')}
           </TableHead>
-          <TableHead className="text-right cursor-pointer">
-            Ação
-          </TableHead>
+          <TableHead className="text-right cursor-pointer">Ação</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

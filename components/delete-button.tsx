@@ -7,6 +7,7 @@ import { Trash } from 'lucide-react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useFormState } from 'react-dom';
+import { revalidatePath } from 'next/cache';
 import { useRouter } from 'next/navigation';
 
 type DeleteButtonProps = {

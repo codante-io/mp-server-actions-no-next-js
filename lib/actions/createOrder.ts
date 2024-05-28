@@ -22,7 +22,6 @@ export default async function createOrder(prevState: any, formData: FormData) {
     amount_in_cents: Number(formData.get('amount_in_cents')) * 100,
   };
 
-  console.log(rawFormData);
 
   const res = await fetch('https://apis.codante.io/api/orders-api/orders', {
     method: 'POST',
