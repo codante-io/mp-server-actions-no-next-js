@@ -4,6 +4,16 @@ import { revalidatePath } from 'next/cache';
 import { nanoid } from 'nanoid';
 
 export default async function createOrder(prevState: any, formData: FormData) {
+  const amount = formData.get('amount_in_cents') as string;
+
+  // adjust for pt-br Number!
+  if (amount) {
+    const amountArray = amount.split(',');
+    if (amountArray.length > 1) {
+      formData.set('amount_in_cents', amountArray.join(''));
+    }
+  }
+
   const rawFormData = {
     customer_name: formData.get('customer_name'),
     customer_email: formData.get('customer_email'),
@@ -11,6 +21,8 @@ export default async function createOrder(prevState: any, formData: FormData) {
     order_date: formData.get('order_date'),
     amount_in_cents: Number(formData.get('amount_in_cents')) * 100,
   };
+
+  console.log(rawFormData);
 
   const res = await fetch('https://apis.codante.io/api/orders-api/orders', {
     method: 'POST',
