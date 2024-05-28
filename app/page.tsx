@@ -29,7 +29,7 @@ export default async function Component({ searchParams }: ComponentProps) {
       params: {
         search: searchParams?.search,
         status: searchParams?.status,
-        sort: searchParams?.sort,
+        sort: searchParams?.sort ?? '-created_at',
         page: searchParams?.page,
       },
     }
@@ -50,12 +50,14 @@ export default async function Component({ searchParams }: ComponentProps) {
           <CardDescription>
             Uma listagem de pedidos do seu negócio.
           </CardDescription>
-          <div className="flex pt-10 w-full justify-between">
-            <div className='flex gap-4'>
+          <div className="flex pt-10 w-full justify-between flex-wrap">
+            <div className="flex gap-4 pt-2">
               <SearchInput />
               <FilterDropdown />
             </div>
-            <DrawerDialog />
+            <div className='pt-2'>
+              <DrawerDialog />
+            </div>
           </div>
         </CardHeader>
         <CardContent>

@@ -41,6 +41,7 @@ import { LoaderIcon, PlusCircle } from 'lucide-react';
 import { DatePicker } from './ui/date-picker';
 import createOrder from '@/lib/actions/createOrder';
 import { format } from 'date-fns';
+import toast from 'react-hot-toast';
 
 export function DrawerDialog() {
   const [open, setOpen] = React.useState(false);
@@ -62,7 +63,7 @@ export function DrawerDialog() {
               Cadastre um pedido. Clique em salvar quando terminar.
             </DialogDescription>
           </DialogHeader>
-          <OrderForm />
+          <OrderForm setOpen={setOpen} />
         </DialogContent>
       </Dialog>
     );
@@ -83,7 +84,7 @@ export function DrawerDialog() {
             Cadastre um pedido. Clique em salvar quando terminar.
           </DrawerDescription>
         </DrawerHeader>
-        <OrderForm className="px-4" />
+        <OrderForm setOpen={setOpen} className="px-4" />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancelar</Button>
@@ -94,11 +95,26 @@ export function DrawerDialog() {
   );
 }
 
-function OrderForm({ className }: React.ComponentProps<'form'>) {
+function OrderForm({
+  className,
+  setOpen,
+}: {
+  className?: string;
+  setOpen: (open: boolean) => void;
+}) {
   const [orderDate, setOrderDate] = React.useState<Date>();
-  const [state, formAction] = useFormState(createOrder, null)
+  const [state, formAction] = useFormState(createOrder, null);
 
-  console.log(state)
+  React.useEffect(() => {
+    if (state?.success === true) {
+      setOpen(false);
+      toast.success(state.message);
+
+      // close the dialog
+    } else if (state?.success === false) {
+      toast.error(state?.message);
+    }
+  }, [state?.success, state?.message, state?.key]);
 
   return (
     <form

@@ -12,7 +12,6 @@ export default function SearchInput() {
 
   const handleChange = useDebouncedCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(event)
       const params = new URLSearchParams(searchParams);
       const searchString = event.target.value;
 

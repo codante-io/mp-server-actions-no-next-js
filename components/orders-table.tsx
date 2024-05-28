@@ -9,9 +9,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from './ui/badge';
-import { ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronsUpDown, ChevronUp, Trash } from 'lucide-react';
 import type { Order } from '@/lib/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Button } from './ui/button';
+import deleteOrder from '@/lib/actions/deleteOrder';
+import DeleteButton from './delete-button';
 
 const formatter = new Intl.NumberFormat('pt-br', {
   style: 'currency',
@@ -70,6 +73,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
             Valor
             {getSortIcon('amount_in_cents')}
           </TableHead>
+          <TableHead className="text-right cursor-pointer">
+            Ação
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -91,6 +97,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
             </TableCell>
             <TableCell className="text-right">
               {formatter.format(order.amount_in_cents / 100)}
+            </TableCell>
+            <TableCell className="text-right">
+              <DeleteButton order={order} />
             </TableCell>
           </TableRow>
         ))}

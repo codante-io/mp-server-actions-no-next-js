@@ -29,7 +29,6 @@ export default function Pagination({ links, lastPage }: PaginationProps) {
   function handleClickPage(pageNumber: number) {
     const params = new URLSearchParams(searchParams);
 
-    console.log(pageNumber);
     if (pageNumber > 1) {
       if (pageNumber > lastPage) {
         params.set('page', lastPage.toString());

@@ -1,5 +1,8 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+import { nanoid } from 'nanoid';
+
 export default async function createOrder(prevState: any, formData: FormData) {
   const rawFormData = {
     customer_name: formData.get('customer_name'),
@@ -17,13 +20,20 @@ export default async function createOrder(prevState: any, formData: FormData) {
     },
   });
 
+  const data = await res.json();
+
+  revalidatePath('/');
   if (!res.ok) {
     return {
-      error: 'Alguma coisa deu errada. Tente novamente.',
+      key: nanoid(),
+      message: `Alguma coisa deu errada. Tente novamente. Erro: "${data.message}"`,
+      success: false,
     };
   } else {
     return {
+      key: nanoid(),
       message: 'Pedido criado com sucesso',
+      success: true,
     };
   }
 }
